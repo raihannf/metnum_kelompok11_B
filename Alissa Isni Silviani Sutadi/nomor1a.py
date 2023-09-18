@@ -21,7 +21,8 @@ def my_bisection(a, b, eps):
 
         iterasi += 1
 
-# Mencari akar dalam interval [0, 1] dengan toleransi 1e-5
-akarHampiran = my_bisection(0, 1, 1e-5)
+# Mencari akar dalam interval [0, 1] dengan toleransi yang dapat Anda atur
+toleransi = 1e-6  # Ubah nilai toleransi sesuai dengan keinginan Anda
+hasilAkhir = my_bisection(0, 1, toleransi)
 
-print("Akar Hampiran dari f:", akarHampiran)
+print("Akar Hampirannya yaitu:", hasilAkhir)
