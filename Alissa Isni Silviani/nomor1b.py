@@ -1,28 +1,26 @@
-import numpy as np  # Memanggil library numpy
+import numpy as np # Menggunakan numpy sebagai library matematika
+import math #memanggil library math supaya program dapat mengenal bilangan euler ('e')
 
-def f(x):
-    return np.exp(x) - x  # Menggunakan fungsi baru f(x) = e^x - x
+e = math.e
+
+def f(x): 
+    return e**x-x # Mendefinisikan fungsi dari soal nomor 1 bagian (b)
 
 def my_bisection(a, b, eps):
-    if np.sign(f(a)) == np.sign(f(b)):
-        raise Exception('Tidak ada akar pada interval a dan b')
+  # Memproses pencarian akar menggunakan metode bisection
+  
+  while np.abs(a-b) > eps: # Terus melakukan iterasi selama selisih b dan a lebih besar dari ketelitian (epsilon)
+    c = (a + b)/2 # Titik tengah interval
+    if f(c) == 0: # Jika fungsi mencapai nol tepat di titik tengah, akar ditemukan.
+      return c
+    elif f(a) * f(c) < 0: # Jika tanda fungsi pada a dan c berbeda, akar ada di interval (a, c).
+      return my_bisection(a, c, eps)
+    else:
+      return my_bisection(c, b, eps)
+    
+  return (a + b)/2
 
-    iterasi = 0
-    while True:  # Terus berjalan hingga kondisi berhenti terpenuhi
-        x = (a + b) / 2  # Titik tengah interval
-        if np.abs(f(x)) < eps:  # Kondisi berhenti jika toleransi terpenuhi
-            return x
+# Mencari akar menggunakan fungsi my_bisection dengan memberikan interval (a, b) dan nilai epsilon
+akarHampiran = my_bisection(-1, 1, 1e-6)
 
-        # Memilih interval baru berdasarkan tanda f(x)
-        if np.sign(f(a)) == np.sign(f(x)):
-            a = x
-        else:
-            b = x
-
-        iterasi += 1
-
-# Mencari akar dalam interval [0, 1] dengan toleransi yang dapat diatur
-toleransi = 1e-6  #nilai toleransi sesuai dengan keinginan Anda
-hasilAkhir = my_bisection(0, 1, toleransi)
-
-print("Akar hampirannya yaitu:", hasilAkhir)
+print("Akar Hampiran dari f:", akarHampiran) # Menampilkan hasil pencarian akar
