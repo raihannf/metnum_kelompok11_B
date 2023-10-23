@@ -30,8 +30,8 @@ a = []
 fa = []
 
 for i in range(n):
-    ai = float(input(f"Masukkan x[{i + 1}]: "))
-    fai = float(input(f"Masukkan f(x)[{i + 1}]: "))
+    ai = float(input(f"Masukkan x[{i}]: "))
+    fai = float(input(f"Masukkan f(x)[{i}]: "))
     a.append(ai)
     fa.append(fai)
 
