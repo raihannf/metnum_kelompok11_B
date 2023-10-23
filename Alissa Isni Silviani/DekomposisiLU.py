@@ -1,44 +1,85 @@
-import numpy as np  # Mengimpor library NumPy untuk operasi matriks
+import numpy as np  # Mengimpor library NumPy
 
-def dekomposisi_LU(matrix_input):
-    n = len(matrix_input)  # Menghitung ukuran matriks input
-    matrix_L = np.zeros((n, n))  # Membuat matriks nol dengan ukuran n x n untuk matriks L
-    matrix_U = np.zeros((n, n))  # Membuat matriks nol dengan ukuran n x n untuk matriks U
+# Fungsi dekomposisi LU
+n = len(A)
+L = np.zeros((n, n))  # Matriks segitiga bawah
+U = np.zeros((n, n))  # Matriks segitiga atas
 
-    for baris in range(n): # Iterasi melalui baris matriks untuk dekomposisi LU
-        # Proses dekomposisi matriks input menjadi matriks U (Segitiga Atas)
-        for kolom in range(baris, n):
-            total = 0
-            for indeks in range(baris):
-                total += matrix_L[baris][indeks] * matrix_U[indeks][kolom]
-            matrix_U[baris][kolom] = matrix_input[baris][kolom] - total
+    for i in range(n):
+        L[i, i] = 1  # diagonal L menjadi 1
+        for j in range(i, n):
+            U[i, j] = A[i, j]
+            for k in range(i):
+                U[i, j] -= L[i, k] * U[k, j]  # penghitungan elemen U
+        for j in range(i + 1, n):
+            L[j, i] = A[j, i]
+            for k in range(i):
+                L[j, i] -= L[j, k] * U[k, i]
+            L[j, i] /= U[i, i]  # penghitungan elemen L
 
-        # Proses dekomposisi matriks input menjadi matriks L (Segitiga Bawah)
-        for kolom in range(baris, n):
-            if baris == kolom:
-                matrix_L[baris][baris] = 1  # Elemen diagonal utama matriks L selalu 1
-            else:
-                total = 0
-                for indeks in range(baris):
-                    total += matrix_L[kolom][indeks] * matrix_U[indeks][baris]
-                matrix_L[kolom][baris] = (matrix_input[kolom][baris] - total) / matrix_U[baris][baris]
+    return L, U
 
-    return matrix_L, matrix_U  # Mengembalikan matriks L dan U setelah dekomposisi
+# Fungsi penyelesaian SPL dengan dekomposisi LU
+def hitungLU(L, U, b):
+    n = len(b)
+    y = np.zeros(n)
+    x = np.zeros(n)
 
-# User menginput matriks
-ukuran_matriks = int(input("Masukkan ukuran matriks (n): "))  # Meminta pengguna untuk memasukkan ukuran matriks
-matrix_input = np.zeros((ukuran_matriks, ukuran_matriks))  # Membuat matriks nol dengan ukuran yang telah diinputkan
+    # Substitusi untuk menyelesaikan Ly = b
+    for i in range(n):
+        y[i] = b[i]
+        for j in range(i):
+            y[i] -= L[i, j] * y[j]
 
-print("Masukkan elemen matriks input:")  # Memberikan instruksi kepada pengguna untuk memasukkan elemen matriks input
-for baris in range(ukuran_matriks):
-    for indeks in range(ukuran_matriks):
-        matrix_input[baris][indeks] = float(input(f"A[{baris+1}][{indeks+1}]: "))  # User menginput elemen matriks
+    # Substitusi untuk menyelesaikan Ux = y
+    for i in range(n - 1, -1, -1):
+        x[i] = y[i]
+        for j in range(i + 1, n):
+            x[i] -= U[i, j] * x[j]
+        x[i] /= U[i, i]
 
-# Lakukan dekomposisi LU
-matrix_L, matrix_U = dekomposisi_LU(matrix_input)  # Memanggil fungsi dekomposisi_LU untuk mendapatkan matriks L dan U
+    return x, y
 
-# Tampilkan matriks L dan U
-print("\nMatriks Segitiga Bawah L:")  # Mencetak matriks L (Segitiga Bawah)
-print(matrix_L)
-print("\nMatriks Segitiga Atas U:")  # Mencetak matriks U (Segitiga Atas)
-print(matrix_U)
+# Menginput ordo matriks A
+n = int(input("Masukkan Ordo Matriks A: "))
+A = np.zeros((n, n))
+b = np.zeros(n)
+
+# menginput elemen pada matriks A dan vektor b
+print("Masukkan elemen matriks A:")
+for i in range(n):
+    for j in range(n):
+        A[i, j] = float(input(f"A[{i+1},{j+1}]: "))
+
+print("Masukkan elemen vektor b:")
+for i in range(n):
+    b[i] = float(input(f"b[{i+1}]: "))
+
+# Melakukan dekomposisi LU menggunakan fungsi dekomposisiLU dengan memasukkan matriks A
+L, U = dekomposisiLU(A)
+
+# Mencetak matriks segitiga bawah L
+print("\nMatriks Segitiga Bawah L:")
+for i in range(n):
+    for j in range(n):
+        print(L[i, j], end="\t")
+    print()
+
+# Mencetak matriks segitiga atas U
+print("\nMatriks Segitiga Atas U:")
+for i in range(n):
+    for j in range(n):
+        print(U[i, j], end="\t")
+    print()
+
+# Menyelesaikan SPL dengan matriks L, matriks U, dan vektor b menggunakan fungsi hitungLU
+x, y = hitungLU(L, U, b)
+
+# Mencetak nilai y
+print("\nNilai y:")
+print(y)
+
+# Mencetak solusi nilai x
+print("Solusi x:")
+for i in range(n):
+    print(f"x{i+1} = {x[i]:.2f}")
