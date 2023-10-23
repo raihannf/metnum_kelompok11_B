@@ -4,25 +4,29 @@
 # b. f(x) = e^x - x
 # Buatlah modifikasi fungsi ketika kriteria program berhenti adalah sudah mencapai pada iterasi ke-n
 
-import math
+import numpy as np #Library Numpy digunakan untuk membantu perhitungan
+import math #Library math digunakan untuk mendefine bilangan euler ('e')
 
-def f(x): #Menisialisasi fungsi yang digunakan
-    return math.exp(x) - x #fungsi f(x) = e^x - x
+e = math.e
 
-def BagiDua_Iterasi_N(N):
-    x = 0  # Nilai awal dari x
-    Iterasi = 0  #Inisialisasi hitungan iterasi
+def f(x): 
+    return e**x-x #Mendefinisikan fungsi dari soal nomor 1 bagian (b)
 
-    #Melakukan Perulangan untuk mencari Iterasi k-N
-    while Iterasi < N: 
-        x_new = x - f(x) / math.exp(x) - x  # Metode untuk mencari akar
-        if abs(x_new - x) < 1e-6:  # Kondisi dimana program akan berhenti jika perbedaan sangat kecil
-            break
-        x = x_new
-        Iterasi += 1
+def my_bisection(a, b, eps):
+  #Proses melakukan pencarian akar menggunakan metode bisection
+  
+  while np.abs(a-b) > eps: # Terus melakukan iterasi selama selisih b dan a lebih besar dari ketelitian (epsilon)
+    c = (a + b)/2 #Titik tengah interval
+    if f(c) == 0: #Jika fungsi mencapai nol tepat di titik tengah, akar ditemukan.
+      return c
+    elif f(a) * f(c) < 0: #Jika tanda fungsi pada a dan c berbeda, akar ada di interval (a, c).
+      return my_bisection(a, c, eps)
+    else:
+      return my_bisection(c, b, eps)
+    
+  return (a + b)/2
 
-    return x
+#Mencari akar menggunakan fungsi my_bisection dengan memberikan interval (a, b) dan nilai epsilon
+akarHampiran = my_bisection(-1, 1, 1e-6)
 
-N = 5  # Ganti dengan nilai n yang Anda inginkan
-root = BagiDua_Iterasi_N(N)
-print(f"Akar setelah iterasi ke {N} adalah: {root}")
+print("Akar Hampiran dari f:", akarHampiran) #Menampilkan Output hasil pencarian akar
