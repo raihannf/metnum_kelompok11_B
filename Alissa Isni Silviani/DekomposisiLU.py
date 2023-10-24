@@ -1,23 +1,25 @@
 import numpy as np  # Mengimpor library NumPy
 
-# Fungsi dekomposisi LU
-n = len(A)
-L = np.zeros((n, n))  # Matriks segitiga bawah
-U = np.zeros((n, n))  # Matriks segitiga atas
+
+def dekomposisiLU(A): # Fungsi dekomposisi LU
+    n = len(A)
+    L = np.zeros((n, n))  # Matriks segitiga bawah
+    U = np.zeros((n, n))  # Matriks segitiga atas
 
     for i in range(n):
-        L[i, i] = 1  # diagonal L menjadi 1
+        L[i, i] = 1  # Diagonal L menjadi 1
         for j in range(i, n):
             U[i, j] = A[i, j]
             for k in range(i):
-                U[i, j] -= L[i, k] * U[k, j]  # penghitungan elemen U
+                U[i, j] -= L[i, k] * U[k, j]  # Penghitungan elemen U
         for j in range(i + 1, n):
             L[j, i] = A[j, i]
             for k in range(i):
                 L[j, i] -= L[j, k] * U[k, i]
-            L[j, i] /= U[i, i]  # penghitungan elemen L
+            L[j, i] /= U[i, i]  # Penghitungan elemen L
 
     return L, U
+
 
 # Fungsi penyelesaian SPL dengan dekomposisi LU
 def hitungLU(L, U, b):
@@ -40,12 +42,13 @@ def hitungLU(L, U, b):
 
     return x, y
 
-# Menginput ordo matriks A
+
+# Menginput untuk mengatur ordo matriks A
 n = int(input("Masukkan Ordo Matriks A: "))
 A = np.zeros((n, n))
 b = np.zeros(n)
 
-# menginput elemen pada matriks A dan vektor b
+# Menginput elemen pada matriks A dan vektor b
 print("Masukkan elemen matriks A:")
 for i in range(n):
     for j in range(n):
@@ -59,14 +62,14 @@ for i in range(n):
 L, U = dekomposisiLU(A)
 
 # Mencetak matriks segitiga bawah L
-print("\nMatriks Segitiga Bawah L:")
+print("Matriks L:")
 for i in range(n):
     for j in range(n):
         print(L[i, j], end="\t")
     print()
 
 # Mencetak matriks segitiga atas U
-print("\nMatriks Segitiga Atas U:")
+print("Matriks U:")
 for i in range(n):
     for j in range(n):
         print(U[i, j], end="\t")
@@ -76,10 +79,9 @@ for i in range(n):
 x, y = hitungLU(L, U, b)
 
 # Mencetak nilai y
-print("\nNilai y:")
+print("Nilai y:")
 print(y)
 
-# Mencetak solusi nilai x
+# Mencetak solusi x
 print("Solusi x:")
-for i in range(n):
-    print(f"x{i+1} = {x[i]:.2f}")
+print(x)
