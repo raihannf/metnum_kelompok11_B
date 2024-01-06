@@ -1,5 +1,5 @@
-# Nama: Khrisna Wahyu Wibisono
 # NIM: 2204340
+# Nama: Khrisna Wahyu Wibisono
 
 import numpy as np  #Library Numpy digunakan untuk membantu perhitungan
 
